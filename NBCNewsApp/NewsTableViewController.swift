@@ -11,9 +11,11 @@ import UIKit
 class NewsTableViewController: UITableViewController {
     
     //store all the stories here
-    var stories: Array<NewsStoryObject>?
+    var breakingStories: Array<NewsStoryObject> = []
+    var stories: Array<NewsStoryObject> = []
     var spinner: UIActivityIndicatorView!
-    
+    var header: String = ""
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,15 +54,30 @@ class NewsTableViewController: UITableViewController {
                 }
                 let json = try? JSONSerialization.jsonObject(with: data, options: [])
                 if let dictionary = json as? [String: Any] {
+                    let items = dictionary["items"] as! [Dictionary<String, Any>]
+                    for story in items{
+                        let storyObj = NewsStoryObject.init(fromDictionary:story)
+                        //store breaking stories in a separate array
+                        //breaking stories will be stored in special tableview cell
+                        if storyObj.breaking == true{
+                            self.breakingStories.append(storyObj)
+                        }
+                        else{
+                            self.stories.append(storyObj)
+                        }
+                    }
+                    //dispatch to main thread to remove spinner and update the header
                     DispatchQueue.main.async {
                         self.spinner.removeFromSuperview()
-                        print(dictionary)
+                        self.header = (dictionary["header"] as? String)!
+                        self.tableView.reloadData()
                     }
                 }
             }
             task.resume()
         }
     }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -71,23 +88,30 @@ class NewsTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return self.stories.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        //
+        return self.stories.count
     }
+    
+//    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+//        return [self.header]
+//    }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "storyCell", for: indexPath)
+        cell.backgroundColor = .clear
+        let story = self.stories[indexPath.row]
+        cell.textLabel?.text = story.headline
+        cell.imageView?.image = story.tease
         // Configure the cell...
 
         return cell
     }
-    */
 
     /*
     // Override to support conditional editing of the table view.
