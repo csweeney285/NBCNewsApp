@@ -14,6 +14,7 @@
 		D9A117F2204466AC00B23FFB /* NewsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A117F1204466AC00B23FFB /* NewsTableViewController.swift */; };
 		D9A117F420446C7200B23FFB /* NBCNews.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A117F320446C7200B23FFB /* NBCNews.png */; };
 		D9A117F620446F1A00B23FFB /* nbcbackground.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9A117F520446F1A00B23FFB /* nbcbackground.jpg */; };
+		D9A117F82044732D00B23FFB /* NewsStoryObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A117F72044732D00B23FFB /* NewsStoryObject.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		D9A117F1204466AC00B23FFB /* NewsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTableViewController.swift; sourceTree = "<group>"; };
 		D9A117F320446C7200B23FFB /* NBCNews.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NBCNews.png; sourceTree = "<group>"; };
 		D9A117F520446F1A00B23FFB /* nbcbackground.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nbcbackground.jpg; sourceTree = "<group>"; };
+		D9A117F72044732D00B23FFB /* NewsStoryObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsStoryObject.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 			children = (
 				D9A117DD204464AD00B23FFB /* AppDelegate.swift */,
 				D9A117F1204466AC00B23FFB /* NewsTableViewController.swift */,
+				D9A117F72044732D00B23FFB /* NewsStoryObject.swift */,
 				D9A117E1204464AD00B23FFB /* Main.storyboard */,
 				D9A117E4204464AD00B23FFB /* Assets.xcassets */,
 				D9A117E6204464AD00B23FFB /* LaunchScreen.storyboard */,
@@ -146,6 +149,7 @@
 			files = (
 				D9A117F2204466AC00B23FFB /* NewsTableViewController.swift in Sources */,
 				D9A117DE204464AD00B23FFB /* AppDelegate.swift in Sources */,
+				D9A117F82044732D00B23FFB /* NewsStoryObject.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

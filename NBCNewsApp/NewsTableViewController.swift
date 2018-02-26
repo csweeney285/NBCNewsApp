@@ -9,9 +9,20 @@
 import UIKit
 
 class NewsTableViewController: UITableViewController {
+    
+    //store all the stories here
+    var stories: Array<NewsStoryObject>?
+    var spinner: UIActivityIndicatorView!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //add spinner
+        spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        spinner.frame = CGRect(x: self.view.center.x, y:self.view.center.y, width: 20.0, height: 20.0)
+        spinner.startAnimating()
+        self.view.addSubview(spinner)
         
         //add header to tableview
         let headerImageName = "NBCNews.png"
@@ -30,6 +41,25 @@ class NewsTableViewController: UITableViewController {
         self.tableView.backgroundView = backgroundView
         
         self.tableView.bounces = false
+        
+        //download news data on background thread
+        DispatchQueue.global(qos: .background).async {
+            let url = URL(string: "http://msgviewer.nbcnewstools.net:9207/v1/query/vertical/news/")
+            let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
+                guard let data = data else {
+                    print("Error: \(String(describing: error))")
+                    return
+                }
+                let json = try? JSONSerialization.jsonObject(with: data, options: [])
+                if let dictionary = json as? [String: Any] {
+                    DispatchQueue.main.async {
+                        self.spinner.removeFromSuperview()
+                        print(dictionary)
+                    }
+                }
+            }
+            task.resume()
+        }
     }
 
     override func didReceiveMemoryWarning() {
