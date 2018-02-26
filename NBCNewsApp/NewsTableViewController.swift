@@ -12,12 +12,24 @@ class NewsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        //add header to tableview
+        let headerImageName = "NBCNews.png"
+        let headerImage = UIImage(named: headerImageName)
+        let headerView = UIImageView(image: headerImage!)
+        headerView.contentMode = .scaleAspectFit
+        headerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 60)
+        self.tableView.tableHeaderView = headerView
+        
+        let backgroundImageName = "nbcbackground.jpg"
+        let backgroundImage = UIImage(named: backgroundImageName)
+        let backgroundView = UIImageView(image: backgroundImage!)
+        backgroundView.contentMode = .scaleAspectFill
+        backgroundView.frame = self.view.frame
+        backgroundView.alpha = 0.5
+        self.tableView.backgroundView = backgroundView
+        
+        self.tableView.bounces = false
     }
 
     override func didReceiveMemoryWarning() {

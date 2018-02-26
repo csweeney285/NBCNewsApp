@@ -12,6 +12,8 @@
 		D9A117E5204464AD00B23FFB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9A117E4204464AD00B23FFB /* Assets.xcassets */; };
 		D9A117E8204464AD00B23FFB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9A117E6204464AD00B23FFB /* LaunchScreen.storyboard */; };
 		D9A117F2204466AC00B23FFB /* NewsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A117F1204466AC00B23FFB /* NewsTableViewController.swift */; };
+		D9A117F420446C7200B23FFB /* NBCNews.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A117F320446C7200B23FFB /* NBCNews.png */; };
+		D9A117F620446F1A00B23FFB /* nbcbackground.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9A117F520446F1A00B23FFB /* nbcbackground.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		D9A117E7204464AD00B23FFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D9A117E9204464AD00B23FFB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9A117F1204466AC00B23FFB /* NewsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTableViewController.swift; sourceTree = "<group>"; };
+		D9A117F320446C7200B23FFB /* NBCNews.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NBCNews.png; sourceTree = "<group>"; };
+		D9A117F520446F1A00B23FFB /* nbcbackground.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nbcbackground.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +64,8 @@
 				D9A117E4204464AD00B23FFB /* Assets.xcassets */,
 				D9A117E6204464AD00B23FFB /* LaunchScreen.storyboard */,
 				D9A117E9204464AD00B23FFB /* Info.plist */,
+				D9A117F320446C7200B23FFB /* NBCNews.png */,
+				D9A117F520446F1A00B23FFB /* nbcbackground.jpg */,
 			);
 			path = NBCNewsApp;
 			sourceTree = "<group>";
@@ -125,6 +131,8 @@
 			files = (
 				D9A117E8204464AD00B23FFB /* LaunchScreen.storyboard in Resources */,
 				D9A117E5204464AD00B23FFB /* Assets.xcassets in Resources */,
+				D9A117F620446F1A00B23FFB /* nbcbackground.jpg in Resources */,
+				D9A117F420446C7200B23FFB /* NBCNews.png in Resources */,
 				D9A117E3204464AD00B23FFB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
