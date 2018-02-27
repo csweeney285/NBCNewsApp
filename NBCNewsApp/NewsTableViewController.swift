@@ -17,6 +17,7 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     var breakingStoryCount = 0
     var spinner: UIActivityIndicatorView!
     var header: String = ""
+    var scrolling: Bool = false
     
 
     override func viewDidLoad() {
@@ -71,7 +72,6 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
                     }
                     //dispatch to main thread to remove spinner and update the header
                     DispatchQueue.main.async {
-                        
                         self.spinner.removeFromSuperview()
                         self.header = (dictionary["header"] as? String)!
                         self.tableView.reloadData()
@@ -82,17 +82,35 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         }
     }
 
-    func createSlideShow() {
-        
-    }
+    //I considered creating a slideshow cell to display breaking news stories but it seemed like overkill
+//    func createSlideShow() {
+//
+//    }
+    
     //reload the data when a new image is downloaded
     func imageDownloaded() {
+        //I could add a check for if the cell is still visible but it seems unnecessary
+//        self.tableView.visibleCells
         self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        //delete all of the image data
+        //store all the visible rows in a dictionary to boost performance instead of checking if a cell is within indexPathsForVisibleRows in each iteration of the for loop
+        var indexDict = [String:String]()
+        for number in 0..<((tableView.indexPathsForVisibleRows?.count)!-1){
+            let key = String(tableView.indexPathsForVisibleRows![number].row)
+            indexDict[key] = "true"
+        }
+        var counter = 0
+        for story in self.stories{
+            //check the dictionary if the cell is visible this will now run in O(n+m) instead of checking if indexPathsForVisibleRows.contains(counter) which would run in O(n*m)
+            if(indexDict [String(counter)] == nil){
+                story.tease = nil
+            }
+            counter = counter + 1
+        }
     }
 
     // MARK: - Table view data source
@@ -113,25 +131,33 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         let story = self.stories[indexPath.row]
 
         cell.textLabel?.text = story.headline
+        if story.type == .video{
+            cell.textLabel?.textColor = .red
+        }
+        else{
+            cell.textLabel?.textColor = .black
+        }
         
         //add placeholder image to properly size the imageview
         cell.imageView?.image = UIImage(named: "clearplaceholder.png")
+        //remove any added image views
+        cell.imageView?.subviews.forEach({ $0.removeFromSuperview() })
         
-        var cellImage : UIImage
-        if story.tease != nil {
-            cellImage = story.tease!
+        //lazy load the images for smoother scrolling
+        if self.scrolling == false  {
+            if story.tease != nil {
+                var cellImage : UIImage
+                cellImage = story.tease!
+                let cellImageView = UIImageView(image: cellImage)
+                cellImageView.contentMode = .scaleAspectFill
+                cellImageView.frame = CGRect(x: 0, y: 0, width: (cell.imageView?.frame.width)!, height: (cell.imageView?.frame.height)!)
+                cellImageView.clipsToBounds = true
+                cell.imageView?.addSubview(cellImageView)
+            }
+            else{
+                story.downloadImage()
+            }
         }
-        else{
-            //return the cell
-            //my placeholder did not look great
-            return cell
-        }
-        let cellImageView = UIImageView(image: cellImage)
-        cellImageView.contentMode = .scaleAspectFill
-        cellImageView.frame = CGRect(x: 0, y: 0, width: (cell.imageView?.frame.width)!, height: (cell.imageView?.frame.height)!)
-        cellImageView.clipsToBounds = true
-        cell.imageView?.addSubview(cellImageView)
-
         return cell
     }
     
@@ -161,55 +187,33 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
             let popoverPresentationController = vc.popoverPresentationController
             popoverPresentationController?.sourceView = self.view
         }
+        //deselect the row so its not higlighted when you return
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     @objc func buttonAction(sender: UIButton!) {
         self.dismiss(animated: true, completion: nil)
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    //lazy load the images to improve scrolling
+    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.scrolling = false
+        self.tableView.reloadData()
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        self.scrolling = false
+        self.tableView.reloadData()
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.scrolling = true
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    
+    override func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        self.scrolling = true
     }
-    */
+    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

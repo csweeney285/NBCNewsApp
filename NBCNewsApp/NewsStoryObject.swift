@@ -26,6 +26,8 @@ class NewsStoryObject: NSObject {
     var summary: String?
     var breaking: Bool?
     var tease: UIImage?
+    var teaseUrl: String?
+
     
     weak var delegate: NewsStoryDelegate?
     
@@ -54,15 +56,19 @@ class NewsStoryObject: NSObject {
         published = dict["published"] as? Date
         summary = dict["summary"] as? String
         
+        //save the url for when the image needs to be downloaded
         url = dict["url"] as? String
-        
+        teaseUrl = dict["tease"] as? String
+    }
+    
+    func downloadImage()  {
         //download the image
         //will send a notification or fire a delegate to reload the table view data
-        if let urlString = dict["tease"] as? String{
-            let url = URL.init(string: urlString)
-            let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
-                guard let data = data, error == nil else { return }
-                DispatchQueue.main.async() {
+        if (self.teaseUrl != nil){
+            let url = URL.init(string: self.teaseUrl!)
+            DispatchQueue.global(qos: .background).async {
+                let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
+                    guard let data = data, error == nil else { return }
                     if self.type == .video{
                         //add video image on top
                         self.tease = self.addVideoImage(data: data)
@@ -70,12 +76,16 @@ class NewsStoryObject: NSObject {
                     else{
                         self.tease = UIImage(data: data)
                     }
-                    self.delegate?.imageDownloaded()
+                    //fire the delegate on the main thread since it has ui implications
+                    DispatchQueue.main.async() {
+                        self.delegate?.imageDownloaded()
+                    }
                 }
+                task.resume()
             }
-            task.resume()
         }
     }
+    
     func addVideoImage(data: Data) -> UIImage {
         let originalImage = UIImage(data: data)
         let videoImage =  #imageLiteral(resourceName: "playbutton.png")
