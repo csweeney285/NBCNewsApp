@@ -3,9 +3,6 @@
 Goal
 Build an iOS application that displays a News feed
 
-Data
-http://msgviewer.nbcnewstools.net:9207/v1/query/vertical/news/
-
 This contains a JSON data feed of variety of news items, namely articles, videos and slideshows (which contain images arrays)
 
 User Needs
