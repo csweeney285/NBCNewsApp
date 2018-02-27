@@ -8,14 +8,16 @@
 
 import UIKit
 
-class NewsTableViewController: UITableViewController {
+
+
+class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     
     //store all the stories here
-    var breakingStories: Array<NewsStoryObject> = []
     var stories: Array<NewsStoryObject> = []
+    var breakingStoryCount = 0
     var spinner: UIActivityIndicatorView!
     var header: String = ""
-
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,11 +58,12 @@ class NewsTableViewController: UITableViewController {
                 if let dictionary = json as? [String: Any] {
                     let items = dictionary["items"] as! [Dictionary<String, Any>]
                     for story in items{
-                        let storyObj = NewsStoryObject.init(fromDictionary:story)
+                        let storyObj = NewsStoryObject.init(fromDictionary:story, delegate: self)
                         //store breaking stories in a separate array
                         //breaking stories will be stored in special tableview cell
                         if storyObj.breaking == true{
-                            self.breakingStories.append(storyObj)
+                            self.stories.insert(storyObj, at: 0)
+                            self.breakingStoryCount = self.breakingStoryCount + 1
                         }
                         else{
                             self.stories.append(storyObj)
@@ -68,6 +71,7 @@ class NewsTableViewController: UITableViewController {
                     }
                     //dispatch to main thread to remove spinner and update the header
                     DispatchQueue.main.async {
+                        
                         self.spinner.removeFromSuperview()
                         self.header = (dictionary["header"] as? String)!
                         self.tableView.reloadData()
@@ -78,6 +82,13 @@ class NewsTableViewController: UITableViewController {
         }
     }
 
+    func createSlideShow() {
+        
+    }
+    //reload the data when a new image is downloaded
+    func imageDownloaded() {
+        self.tableView.reloadData()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -88,29 +99,72 @@ class NewsTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return self.stories.count
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        //
         return self.stories.count
     }
     
-//    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-//        return [self.header]
-//    }
 
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "storyCell", for: indexPath)
         cell.backgroundColor = .clear
         let story = self.stories[indexPath.row]
+
         cell.textLabel?.text = story.headline
-        cell.imageView?.image = story.tease
-        // Configure the cell...
+        
+        //add placeholder image to properly size the imageview
+        cell.imageView?.image = UIImage(named: "clearplaceholder.png")
+        
+        var cellImage : UIImage
+        if story.tease != nil {
+            cellImage = story.tease!
+        }
+        else{
+            //return the cell
+            //my placeholder did not look great
+            return cell
+        }
+        let cellImageView = UIImageView(image: cellImage)
+        cellImageView.contentMode = .scaleAspectFill
+        cellImageView.frame = CGRect(x: 0, y: 0, width: (cell.imageView?.frame.width)!, height: (cell.imageView?.frame.height)!)
+        cellImageView.clipsToBounds = true
+        cell.imageView?.addSubview(cellImageView)
 
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let story = stories[indexPath.row]
+        if let url = URL(string: story.url!){
+            let vc = UIViewController()
+            vc.modalPresentationStyle = UIModalPresentationStyle.popover
+            
+            let header = UIView(frame: CGRect(x: 0, y: 0, width: vc.view.frame.size.width, height: 60))
+            header.backgroundColor = .lightGray
+            vc.view.addSubview(header)
+            
+            let webView = UIWebView(frame: CGRect(x: 0, y: 60, width: self.view.frame.size.width, height:  self.view.frame.size.height-60))
+            let request = URLRequest(url: url)
+            webView.loadRequest(request)
+            vc.view.addSubview(webView)
+            
+            let button = UIButton(type: .system)
+            button.frame =  CGRect(x: 10, y: 25, width: 60, height: 40)
+            button.setTitle("Done", for: .normal)
+            button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+            header.addSubview(button)
+            
+            present(vc, animated: true, completion: nil)
+            
+            let popoverPresentationController = vc.popoverPresentationController
+            popoverPresentationController?.sourceView = self.view
+        }
+    }
+    
+    @objc func buttonAction(sender: UIButton!) {
+        self.dismiss(animated: true, completion: nil)
     }
 
     /*
