@@ -18,6 +18,7 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     var spinner: UIActivityIndicatorView!
     var header: String = ""
     var scrolling: Bool = false
+    var articleDict: Dictionary = [String:String]()
     
 
     override func viewDidLoad() {
@@ -61,12 +62,17 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
                         //store breaking stories in a separate array
                         //breaking stories will be stored in special tableview cell
                         if storyObj.breaking == true{
-                            self.stories.insert(storyObj, at: 0)
-                            self.breakingStoryCount = self.breakingStoryCount + 1
+                            if !(self.articleDict [storyObj.headline!] != nil){
+                                self.stories.insert(storyObj, at: 0)
+                                self.breakingStoryCount = self.breakingStoryCount + 1
+                            }
                         }
                         else{
-                            self.stories.append(storyObj)
+                            if !(self.articleDict [storyObj.headline!] != nil){
+                                self.stories.append(storyObj)
+                            }
                         }
+                        self.articleDict[storyObj.headline!] = "true"
                     }
                     //dispatch to main thread to remove spinner and update the header
                     DispatchQueue.main.async {
