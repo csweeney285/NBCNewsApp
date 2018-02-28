@@ -45,8 +45,6 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         backgroundView.alpha = 0.5
         self.tableView.backgroundView = backgroundView
         
-        self.tableView.bounces = false
-        
         //download news data on background thread
         DispatchQueue.global(qos: .background).async {
             let url = URL(string: "http://msgviewer.nbcnewstools.net:9207/v1/query/vertical/news/")
@@ -141,7 +139,11 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         //add placeholder image to properly size the imageview
         cell.imageView?.image = UIImage(named: "clearplaceholder.png")
         //remove any added image views
-        cell.imageView?.subviews.forEach({ $0.removeFromSuperview() })
+        if cell.imageView?.subviews.count == 1{
+            if cell.imageView?.subviews[0].tag != indexPath.row{
+                cell.imageView?.subviews.forEach({ $0.removeFromSuperview() })
+            }
+        }
         
         //lazy load the images for smoother scrolling
         if self.scrolling == false  {
@@ -152,6 +154,7 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
                 cellImageView.contentMode = .scaleAspectFill
                 cellImageView.frame = CGRect(x: 0, y: 0, width: (cell.imageView?.frame.width)!, height: (cell.imageView?.frame.height)!)
                 cellImageView.clipsToBounds = true
+                cellImageView.tag = indexPath.row
                 cell.imageView?.addSubview(cellImageView)
             }
             else{
@@ -214,6 +217,5 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         self.scrolling = true
     }
     
-
 
 }
