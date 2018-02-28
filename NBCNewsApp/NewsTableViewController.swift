@@ -138,28 +138,31 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         
         //add placeholder image to properly size the imageview
         cell.imageView?.image = UIImage(named: "clearplaceholder.png")
-        //remove any added image views
-        if cell.imageView?.subviews.count == 1{
-            if cell.imageView?.subviews[0].tag != indexPath.row{
-                cell.imageView?.subviews.forEach({ $0.removeFromSuperview() })
-            }
-        }
         
         //lazy load the images for smoother scrolling
-        if self.scrolling == false  {
-            if story.tease != nil {
-                var cellImage : UIImage
-                cellImage = story.tease!
-                let cellImageView = UIImageView(image: cellImage)
-                cellImageView.contentMode = .scaleAspectFill
-                cellImageView.frame = CGRect(x: 0, y: 0, width: (cell.imageView?.frame.width)!, height: (cell.imageView?.frame.height)!)
-                cellImageView.clipsToBounds = true
-                cellImageView.tag = indexPath.row
-                cell.imageView?.addSubview(cellImageView)
+        var cellImageView = UIImageView()
+        var addSubview = true
+        for subview in (cell.imageView?.subviews)!{
+            if subview.tag == 1{
+                cellImageView = subview as! UIImageView
+                addSubview = false
             }
-            else{
+        }
+        if story.tease != nil {
+            cellImageView.image = story.tease!
+        }
+        else{
+            cellImageView.image = #imageLiteral(resourceName: "clearplaceholder.png")
+            if self.scrolling == false{
                 story.downloadImage()
             }
+        }
+        cellImageView.contentMode = .scaleAspectFill
+        cellImageView.frame = CGRect(x: 0, y: 0, width: (cell.imageView?.frame.width)!, height: (cell.imageView?.frame.height)!)
+        cellImageView.clipsToBounds = true
+        cellImageView.tag = 1
+        if addSubview == true{
+            cell.imageView?.addSubview(cellImageView)
         }
         return cell
     }
