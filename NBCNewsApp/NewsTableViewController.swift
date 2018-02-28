@@ -18,7 +18,6 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     var spinner: UIActivityIndicatorView!
     var header: String = ""
     var scrolling: Bool = false
-    var articleDict: Dictionary = [String:String]()
     
 
     override func viewDidLoad() {
@@ -57,22 +56,23 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
                 let json = try? JSONSerialization.jsonObject(with: data, options: [])
                 if let dictionary = json as? [String: Any] {
                     let items = dictionary["items"] as! [Dictionary<String, Any>]
+                    var articleDict = [String:String]()
                     for story in items{
                         let storyObj = NewsStoryObject.init(fromDictionary:story, delegate: self)
                         //store breaking stories in a separate array
                         //breaking stories will be stored in special tableview cell
                         if storyObj.breaking == true{
-                            if !(self.articleDict [storyObj.headline!] != nil){
+                            if !(articleDict [storyObj.headline!] != nil){
                                 self.stories.insert(storyObj, at: 0)
                                 self.breakingStoryCount = self.breakingStoryCount + 1
                             }
                         }
                         else{
-                            if !(self.articleDict [storyObj.headline!] != nil){
+                            if !(articleDict [storyObj.headline!] != nil){
                                 self.stories.append(storyObj)
                             }
                         }
-                        self.articleDict[storyObj.headline!] = "true"
+                        articleDict[storyObj.headline!] = "true"
                     }
                     //dispatch to main thread to remove spinner and update the header
                     DispatchQueue.main.async {

@@ -68,7 +68,10 @@ class NewsStoryObject: NSObject {
             let url = URL.init(string: self.teaseUrl!)
             DispatchQueue.global(qos: .background).async {
                 let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
-                    guard let data = data, error == nil else { return }
+                    guard let data = data, error == nil else {
+                        print("Error: \(String(describing: error))")
+                        return
+                    }
                     if self.type == .video{
                         //add video image on top
                         self.tease = self.addVideoImage(data: data)
@@ -87,17 +90,20 @@ class NewsStoryObject: NSObject {
     }
     
     func addVideoImage(data: Data) -> UIImage {
-        let originalImage = UIImage(data: data)
         let videoImage =  #imageLiteral(resourceName: "playbutton.png")
-        
-        UIGraphicsBeginImageContextWithOptions((originalImage?.size)!, false, 0.0)
-        originalImage?.draw(in: CGRect(x: 0, y: 0, width: (originalImage?.size.width)!, height: (originalImage?.size.height)!))
-        videoImage.draw(in: CGRect(x: (originalImage?.size.width)!/2 - (originalImage?.size.height)!/2, y: 0, width: (originalImage?.size.height)!, height: (originalImage?.size.height)!))
-        
-        let result = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return result!
+        if let originalImage = UIImage(data: data){
+            let videoImage =  #imageLiteral(resourceName: "playbutton.png")
+            
+            UIGraphicsBeginImageContextWithOptions((originalImage.size), false, 0.0)
+            originalImage.draw(in: CGRect(x: 0, y: 0, width: (originalImage.size.width), height: (originalImage.size.height)))
+            videoImage.draw(in: CGRect(x: (originalImage.size.width)/2 - (originalImage.size.height)/2, y: 0, width: (originalImage.size.height), height: (originalImage.size.height)))
+            
+            let result = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            return result!
+        }
+        return videoImage
     }
 }
 
