@@ -14,14 +14,17 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     
     //store all the stories here
     var stories: Array<NewsStoryObject> = []
-    var breakingStoryCount = 0
     var spinner: UIActivityIndicatorView!
     var header: String = ""
     var scrolling: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setUpView()
+        downloadArticleData()
+    }
+    
+    func setUpView()  {
         //add spinner
         spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         spinner.frame = CGRect(x: self.view.center.x, y:self.view.center.y, width: 20.0, height: 20.0)
@@ -36,6 +39,7 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         headerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 60)
         self.tableView.tableHeaderView = headerView
         
+        //add background
         let backgroundImageName = "nbcbackground.jpg"
         let backgroundImage = UIImage(named: backgroundImageName)
         let backgroundView = UIImageView(image: backgroundImage!)
@@ -43,7 +47,9 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         backgroundView.frame = self.view.frame
         backgroundView.alpha = 0.5
         self.tableView.backgroundView = backgroundView
-        
+    }
+    
+    func downloadArticleData() {
         //download news data on background thread
         DispatchQueue.global(qos: .background).async {
             let url = URL(string: "http://msgviewer.nbcnewstools.net:9207/v1/query/vertical/news/")
@@ -59,19 +65,17 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
                     var articleDict = [String:String]()
                     for story in items{
                         let storyObj = NewsStoryObject.init(fromDictionary:story, delegate: self)
-                        //store breaking stories at the front of the array so they appear first
-                        if storyObj.breaking == true{
-                            if !(articleDict [storyObj.headline!] != nil){
+                        if !(articleDict [storyObj.headline!] != nil){
+                            if storyObj.breaking == true{
+                                //store breaking stories at the front of the array so they appear first
                                 self.stories.insert(storyObj, at: 0)
-                                self.breakingStoryCount = self.breakingStoryCount + 1
                             }
-                        }
-                        else{
-                            if !(articleDict [storyObj.headline!] != nil){
+                            else{
                                 self.stories.append(storyObj)
                             }
+                            //add the headline to the dictionary to prevent duplicate article
+                            articleDict[storyObj.headline!] = "true"
                         }
-                        articleDict[storyObj.headline!] = "true"
                     }
                     //dispatch to main thread to remove spinner and update the header
                     DispatchQueue.main.async {
@@ -86,12 +90,17 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     }
     
     //reload the data when a new image is downloaded
+    //this is fired by the NewsStoryObject delegate
     func imageDownloaded() {
         self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        removeImagesFromMemory()
+    }
+    
+    func removeImagesFromMemory() {
         //delete all of the image data
         //store all the visible rows in a dictionary to boost performance instead of checking if a cell is within indexPathsForVisibleRows in each iteration of the for loop
         var indexDict = [String:String]()
@@ -112,14 +121,12 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.stories.count
     }
-    
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //fetch the story that relates to the cell
@@ -127,29 +134,32 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
 
         //create cell
         let cell = tableView.dequeueReusableCell(withIdentifier: "storyCell", for: indexPath)
+        
+        return formatNewsStoryCell(story: story, cell: cell)
+    }
+    
+    func formatNewsStoryCell(story: NewsStoryObject, cell: UITableViewCell) -> UITableViewCell {
+        //create cell
         cell.backgroundColor = .clear
-
-        //set the label text color to red if it is a video and black if it is an articl
-        cell.textLabel?.text = story.headline
-        if story.type == .video{
-            cell.textLabel?.textColor = .red
-        }
-        else{
-            cell.textLabel?.textColor = .black
-        }
         
         //add placeholder image to properly size the imageview
-        cell.imageView?.image = UIImage(named: "clearplaceholder.png")
+        cell.imageView?.image = #imageLiteral(resourceName: "clearplaceholder.png")
         
         //lazy load the images for smoother scrolling
         var cellImageView = UIImageView()
-        var addSubview = true
+        var cellVideoOverlay = UIImageView()
+        //only add the subview if it does not exist
+        //fetch the extra image views to change their images or alpha
         for subview in (cell.imageView?.subviews)!{
+            //the image views are already in the cell no need to add them again
             if subview.tag == 1{
                 cellImageView = subview as! UIImageView
-                addSubview = false
+            }
+            else if subview.tag == 2{
+                cellVideoOverlay = subview as! UIImageView
             }
         }
+        
         //check to see if the tease image is already downloaded if so add it to the image view
         if story.tease != nil {
             cellImageView.image = story.tease!
@@ -163,13 +173,35 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
             }
         }
         
-        //add the second cell image view if it is missing
-        if addSubview == true{
-            cellImageView.contentMode = .scaleAspectFill
-            cellImageView.frame = CGRect(x: 0, y: 0, width: (cell.imageView?.frame.width)!, height: (cell.imageView?.frame.height)!)
-            cellImageView.clipsToBounds = true
-            cellImageView.tag = 1
-            cell.imageView?.addSubview(cellImageView)
+        //add the extra cell image views if it is missing
+        cellImageView.contentMode = .scaleAspectFill
+        cellImageView.clipsToBounds = true
+        cellImageView.tag = 1
+        cellImageView.frame = CGRect(x: 0, y: 0, width: (cell.imageView?.frame.width)!, height: (cell.imageView?.frame.height)!)
+        cell.imageView?.addSubview(cellImageView)
+        
+        //add the video image on top of the image
+        //i will adjust the alpha to show it
+        cellVideoOverlay.contentMode = .scaleAspectFit
+        cellVideoOverlay.clipsToBounds = true
+        cellVideoOverlay.tag = 2
+        cellVideoOverlay.image = #imageLiteral(resourceName: "playbutton.png")
+        cellVideoOverlay.frame = CGRect(x: 0, y: 0, width: (cell.imageView?.frame.width)!, height: (cell.imageView?.frame.height)!)
+        
+        cell.imageView?.addSubview(cellVideoOverlay)
+        
+        //for videos
+        //set the label text color to red if it is a video and black if it is an article
+        //set the video image alpha to one if it is a video
+        cell.textLabel?.text = story.headline
+        
+        if story.type == .video {
+            cell.textLabel?.textColor = .red
+            cellVideoOverlay.alpha = 1.0
+        }
+        else{
+            cell.textLabel?.textColor = .black
+            cellVideoOverlay.alpha = 0.0
         }
         
         return cell
@@ -179,42 +211,48 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         //fetch the NewStoryObject that was selected
         let story = stories[indexPath.row]
         if let url = URL(string: story.url!){
-            //create and pop a simple presentation vc to display the url
-            let vc = UIViewController()
-            vc.modalPresentationStyle = UIModalPresentationStyle.popover
-            
-            //header
-            let header = UIView(frame: CGRect(x: 0, y: 0, width: vc.view.frame.size.width, height: 60))
-            header.backgroundColor = .lightGray
-            vc.view.addSubview(header)
-            
-            //dismiss button
-            let button = UIButton(type: .system)
-            button.frame =  CGRect(x: 10, y: 25, width: 60, height: 40)
-            button.setTitle("Done", for: .normal)
-            button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-            header.addSubview(button)
-            
-            //webview
-            let webView = UIWebView(frame: CGRect(x: 0, y: 60, width: self.view.frame.size.width, height:  self.view.frame.size.height-60))
-            let request = URLRequest(url: url)
-            webView.loadRequest(request)
-            vc.view.addSubview(webView)
-            
-            present(vc, animated: true, completion: nil)
-            
-            //this is to prevent crash for ipads
-            let popoverPresentationController = vc.popoverPresentationController
-            popoverPresentationController?.sourceView = self.view
+            presentArticleViewController(url: url)
         }
         //deselect the row so its not higlighted when you return
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    // MARK: - Article webview
+    func presentArticleViewController(url: URL) {
+        //create and pop a simple presentation vc to display the url
+        let vc = UIViewController()
+        vc.modalPresentationStyle = UIModalPresentationStyle.popover
+        
+        //header
+        let header = UIView(frame: CGRect(x: 0, y: 0, width: vc.view.frame.size.width, height: 60))
+        header.backgroundColor = .lightGray
+        vc.view.addSubview(header)
+        
+        //dismiss button
+        let button = UIButton(type: .system)
+        button.frame =  CGRect(x: 10, y: 25, width: 60, height: 40)
+        button.setTitle("Done", for: .normal)
+        button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        header.addSubview(button)
+        
+        //webview
+        let webView = UIWebView(frame: CGRect(x: 0, y: 60, width: self.view.frame.size.width, height:  self.view.frame.size.height-60))
+        let request = URLRequest(url: url)
+        webView.loadRequest(request)
+        vc.view.addSubview(webView)
+        
+        present(vc, animated: true, completion: nil)
+        
+        //this is to prevent crash for ipads
+        let popoverPresentationController = vc.popoverPresentationController
+        popoverPresentationController?.sourceView = self.view
     }
     
     @objc func buttonAction(sender: UIButton!) {
         self.dismiss(animated: true, completion: nil)
     }
     
+    // MARK: - Scrollview delegate
     //lazy load the images to improve scrolling
     //this way we only download images for stories that are in view
     override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

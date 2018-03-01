@@ -36,6 +36,7 @@ class NewsStoryObject: NSObject {
         super.init()
         self.delegate = delegate
         
+        //append the headline variable to add breaking and video to it
         var headline = ""
         
         breaking = dict["breaking"] as? Bool
@@ -51,6 +52,8 @@ class NewsStoryObject: NSObject {
             headline = String(format:"%@Video: ",headline)
             type = .video
         }
+        
+        //add the actual headline
         self.headline = String(format:"%@%@",headline, (dict["headline"] as? String)!)
         
         published = dict["published"] as? Date
@@ -72,15 +75,9 @@ class NewsStoryObject: NSObject {
                         print("Error: \(String(describing: error))")
                         return
                     }
-                    if self.type == .video{
-                        //add video image on top
-                        self.tease = self.addVideoImage(data: data)
-                    }
-                    else{
-                        self.tease = UIImage(data: data)
-                    }
                     //fire the delegate on the main thread since it has ui implications
                     DispatchQueue.main.async() {
+                        self.tease = UIImage(data: data)
                         self.delegate?.imageDownloaded()
                     }
                 }
@@ -89,21 +86,22 @@ class NewsStoryObject: NSObject {
         }
     }
     
-    func addVideoImage(data: Data) -> UIImage {
-        let videoImage =  #imageLiteral(resourceName: "playbutton.png")
-        if let originalImage = UIImage(data: data){
-            
-            UIGraphicsBeginImageContextWithOptions((originalImage.size), false, 0.0)
-            originalImage.draw(in: CGRect(x: 0, y: 0, width: (originalImage.size.width), height: (originalImage.size.height)))
-            videoImage.draw(in: CGRect(x: (originalImage.size.width)/2 - (originalImage.size.height)/2, y: 0, width: (originalImage.size.height), height: (originalImage.size.height)))
-            
-            let result = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            
-            return result!
-        }
-        return videoImage
-    }
+    //add a video overlay directly to the image
+//    func addVideoImage(data: Data) -> UIImage {
+//        let videoImage =  #imageLiteral(resourceName: "playbutton.png")
+//        if let originalImage = UIImage(data: data){
+//
+//            UIGraphicsBeginImageContextWithOptions((originalImage.size), false, 0.0)
+//            originalImage.draw(in: CGRect(x: 0, y: 0, width: (originalImage.size.width), height: (originalImage.size.height)))
+//            videoImage.draw(in: CGRect(x: (originalImage.size.width)/2 - (originalImage.size.height)/2, y: 0, width: (originalImage.size.height), height: (originalImage.size.height)))
+//
+//            let result = UIGraphicsGetImageFromCurrentImageContext()
+//            UIGraphicsEndImageContext()
+//
+//            return result!
+//        }
+//        return videoImage
+//    }
 }
 
 
