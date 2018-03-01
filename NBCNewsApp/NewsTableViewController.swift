@@ -152,14 +152,15 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     // MARK: - Article webview
     func presentArticleViewController(url: URL) {
         //create and pop a simple presentation vc to display the url
-        let vc = StoryViewController()
-        vc.addWebView(url: url)
-        vc.modalPresentationStyle = UIModalPresentationStyle.popover
-
-        present(vc, animated: true, completion: nil)
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "StoryViewController") as! StoryViewController
+        controller.loadUrl(url: url)
+        controller.modalPresentationStyle = UIModalPresentationStyle.popover
+        present(controller, animated: true, completion: nil)
         
         //this is to prevent crash for ipads
-        let popoverPresentationController = vc.popoverPresentationController
+        let popoverPresentationController = controller.popoverPresentationController
         popoverPresentationController?.sourceView = self.view
     }
     
