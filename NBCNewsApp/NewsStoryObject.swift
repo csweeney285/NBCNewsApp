@@ -92,7 +92,6 @@ class NewsStoryObject: NSObject {
     func addVideoImage(data: Data) -> UIImage {
         let videoImage =  #imageLiteral(resourceName: "playbutton.png")
         if let originalImage = UIImage(data: data){
-            let videoImage =  #imageLiteral(resourceName: "playbutton.png")
             
             UIGraphicsBeginImageContextWithOptions((originalImage.size), false, 0.0)
             originalImage.draw(in: CGRect(x: 0, y: 0, width: (originalImage.size.width), height: (originalImage.size.height)))
