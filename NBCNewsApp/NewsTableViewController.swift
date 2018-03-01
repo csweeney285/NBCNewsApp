@@ -15,7 +15,7 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     //store all the stories here
     var stories: Array<NewsStoryObject> = []
     var spinner: UIActivityIndicatorView!
-    var header: String = ""
+    var headerLabel = UILabel()
     var scrolling: Bool = false
 
     override func viewDidLoad() {
@@ -32,11 +32,20 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         self.view.addSubview(spinner)
         
         //add header to tableview
+        let headerView = UIView(frame:CGRect(x: 0, y: 0, width: self.view.frame.width, height: 110))
+        //image view
         let headerImageName = "NBCNews.png"
         let headerImage = UIImage(named: headerImageName)
-        let headerView = UIImageView(image: headerImage!)
-        headerView.contentMode = .scaleAspectFit
-        headerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 60)
+        let headerImageView = UIImageView(image: headerImage!)
+        headerImageView.contentMode = .scaleAspectFit
+        headerImageView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 60)
+        headerView.addSubview(headerImageView)
+        //label
+        self.headerLabel = UILabel(frame: CGRect(x: 0, y: 60, width: self.view.frame.width, height: 50))
+        headerLabel.numberOfLines = 2
+        headerLabel.textAlignment = .center
+        headerView.addSubview(headerLabel)
+
         self.tableView.tableHeaderView = headerView
         
         //add background
@@ -80,7 +89,11 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
                     //dispatch to main thread to remove spinner and update the header
                     DispatchQueue.main.async {
                         self.spinner.removeFromSuperview()
-                        self.header = (dictionary["header"] as? String)!
+                        var headerText = (dictionary["header"] as? String)!
+                        if headerText.contains("NBC News -"){
+                            headerText.removeFirst(10)
+                        }
+                        self.headerLabel.text = headerText
                         self.tableView.reloadData()
                     }
                 }
