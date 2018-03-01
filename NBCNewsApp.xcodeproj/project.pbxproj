@@ -50,7 +50,6 @@
 		D93EACF52048787F0000D098 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D9A117E9204464AD00B23FFB /* Info.plist */,
 				D9A117F320446C7200B23FFB /* NBCNews.png */,
 				D9A117F520446F1A00B23FFB /* nbcbackground.jpg */,
 				D9A1180120449CC500B23FFB /* playbutton.png */,
@@ -85,6 +84,7 @@
 				D9A117E1204464AD00B23FFB /* Main.storyboard */,
 				D9A117E4204464AD00B23FFB /* Assets.xcassets */,
 				D9A117E6204464AD00B23FFB /* LaunchScreen.storyboard */,
+				D9A117E9204464AD00B23FFB /* Info.plist */,
 				D93EACF52048787F0000D098 /* Supporting Files */,
 			);
 			path = NBCNewsApp;

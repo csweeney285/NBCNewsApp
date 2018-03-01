@@ -20,13 +20,9 @@ class NewsTableViewCell: UITableViewCell {
         if story.tease != nil {
             articleImageView.image = story.tease!
         }
-        else{
-            //set the image to the clear placeholder to override any existing image
-            articleImageView.image = #imageLiteral(resourceName: "clearplaceholder.png")
-            if scrolling == false{
-                //if we are not scrolling that means that this article is in view so lazy download the image
-                story.downloadImage()
-            }
+        else if scrolling == false{
+            //if we are not scrolling that means that this article is in view so lazy download the image
+            story.downloadImage()
         }
         self.headlineLabel?.text = story.headline
         
