@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D93EACF22048756D0000D098 /* NewsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93EACF12048756D0000D098 /* NewsTableViewCell.swift */; };
+		D93EACF4204876850000D098 /* StoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93EACF3204876850000D098 /* StoryViewController.swift */; };
 		D9A117DE204464AD00B23FFB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A117DD204464AD00B23FFB /* AppDelegate.swift */; };
 		D9A117E3204464AD00B23FFB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9A117E1204464AD00B23FFB /* Main.storyboard */; };
 		D9A117E5204464AD00B23FFB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9A117E4204464AD00B23FFB /* Assets.xcassets */; };
@@ -15,12 +17,12 @@
 		D9A117F420446C7200B23FFB /* NBCNews.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A117F320446C7200B23FFB /* NBCNews.png */; };
 		D9A117F620446F1A00B23FFB /* nbcbackground.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9A117F520446F1A00B23FFB /* nbcbackground.jpg */; };
 		D9A117F82044732D00B23FFB /* NewsStoryObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A117F72044732D00B23FFB /* NewsStoryObject.swift */; };
-		D9A1180020449C7F00B23FFB /* placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A117FF20449C7F00B23FFB /* placeholder.png */; };
 		D9A1180220449CC500B23FFB /* playbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A1180120449CC500B23FFB /* playbutton.png */; };
-		D9A118042044A11E00B23FFB /* clearplaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A118032044A11E00B23FFB /* clearplaceholder.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D93EACF12048756D0000D098 /* NewsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTableViewCell.swift; sourceTree = "<group>"; };
+		D93EACF3204876850000D098 /* StoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryViewController.swift; sourceTree = "<group>"; };
 		D9A117DA204464AD00B23FFB /* NBCNewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NBCNewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9A117DD204464AD00B23FFB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D9A117E2204464AD00B23FFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -31,9 +33,7 @@
 		D9A117F320446C7200B23FFB /* NBCNews.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NBCNews.png; sourceTree = "<group>"; };
 		D9A117F520446F1A00B23FFB /* nbcbackground.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nbcbackground.jpg; sourceTree = "<group>"; };
 		D9A117F72044732D00B23FFB /* NewsStoryObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsStoryObject.swift; sourceTree = "<group>"; };
-		D9A117FF20449C7F00B23FFB /* placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholder.png; sourceTree = "<group>"; };
 		D9A1180120449CC500B23FFB /* playbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playbutton.png; sourceTree = "<group>"; };
-		D9A118032044A11E00B23FFB /* clearplaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clearplaceholder.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +47,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D93EACF52048787F0000D098 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D9A117E9204464AD00B23FFB /* Info.plist */,
+				D9A117F320446C7200B23FFB /* NBCNews.png */,
+				D9A117F520446F1A00B23FFB /* nbcbackground.jpg */,
+				D9A1180120449CC500B23FFB /* playbutton.png */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		D9A117D1204464AD00B23FFB = {
 			isa = PBXGroup;
 			children = (
@@ -67,17 +78,14 @@
 			isa = PBXGroup;
 			children = (
 				D9A117DD204464AD00B23FFB /* AppDelegate.swift */,
-				D9A117F1204466AC00B23FFB /* NewsTableViewController.swift */,
 				D9A117F72044732D00B23FFB /* NewsStoryObject.swift */,
+				D9A117F1204466AC00B23FFB /* NewsTableViewController.swift */,
+				D93EACF12048756D0000D098 /* NewsTableViewCell.swift */,
+				D93EACF3204876850000D098 /* StoryViewController.swift */,
 				D9A117E1204464AD00B23FFB /* Main.storyboard */,
 				D9A117E4204464AD00B23FFB /* Assets.xcassets */,
 				D9A117E6204464AD00B23FFB /* LaunchScreen.storyboard */,
-				D9A117E9204464AD00B23FFB /* Info.plist */,
-				D9A117F320446C7200B23FFB /* NBCNews.png */,
-				D9A117F520446F1A00B23FFB /* nbcbackground.jpg */,
-				D9A1180120449CC500B23FFB /* playbutton.png */,
-				D9A117FF20449C7F00B23FFB /* placeholder.png */,
-				D9A118032044A11E00B23FFB /* clearplaceholder.png */,
+				D93EACF52048787F0000D098 /* Supporting Files */,
 			);
 			path = NBCNewsApp;
 			sourceTree = "<group>";
@@ -142,10 +150,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9A117E8204464AD00B23FFB /* LaunchScreen.storyboard in Resources */,
-				D9A118042044A11E00B23FFB /* clearplaceholder.png in Resources */,
 				D9A117E5204464AD00B23FFB /* Assets.xcassets in Resources */,
 				D9A117F620446F1A00B23FFB /* nbcbackground.jpg in Resources */,
-				D9A1180020449C7F00B23FFB /* placeholder.png in Resources */,
 				D9A117F420446C7200B23FFB /* NBCNews.png in Resources */,
 				D9A117E3204464AD00B23FFB /* Main.storyboard in Resources */,
 				D9A1180220449CC500B23FFB /* playbutton.png in Resources */,
@@ -159,8 +165,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D93EACF4204876850000D098 /* StoryViewController.swift in Sources */,
 				D9A117F2204466AC00B23FFB /* NewsTableViewController.swift in Sources */,
 				D9A117DE204464AD00B23FFB /* AppDelegate.swift in Sources */,
+				D93EACF22048756D0000D098 /* NewsTableViewCell.swift in Sources */,
 				D9A117F82044732D00B23FFB /* NewsStoryObject.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

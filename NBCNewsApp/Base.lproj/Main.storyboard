@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -17,13 +18,49 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="storyCell" id="YKt-8h-3Gl">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="storyCell" id="YKt-8h-3Gl" customClass="NewsTableViewCell" customModule="NBCNewsApp" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YKt-8h-3Gl" id="2Z4-Hm-mcI">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tTZ-nr-TL3">
+                                            <rect key="frame" x="0.0" y="0.0" width="60" height="44"/>
+                                        </imageView>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="playbutton.png" translatesAutoresizingMaskIntoConstraints="NO" id="WeL-7H-Gfr">
+                                            <rect key="frame" x="5" y="1" width="50" height="40"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="50" id="GU3-ez-pea"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E1r-PK-LBZ">
+                                            <rect key="frame" x="68" y="12" width="288" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="288" id="Axm-n9-aIT"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailingMargin" secondItem="E1r-PK-LBZ" secondAttribute="trailing" constant="11" id="3nJ-fa-RlH"/>
+                                        <constraint firstItem="WeL-7H-Gfr" firstAttribute="top" secondItem="2Z4-Hm-mcI" secondAttribute="topMargin" constant="-7" id="3v4-Pk-3kd"/>
+                                        <constraint firstItem="WeL-7H-Gfr" firstAttribute="leading" secondItem="2Z4-Hm-mcI" secondAttribute="leadingMargin" constant="-3" id="4G2-cz-tVB"/>
+                                        <constraint firstItem="tTZ-nr-TL3" firstAttribute="top" secondItem="2Z4-Hm-mcI" secondAttribute="top" id="Ij9-hr-lGX"/>
+                                        <constraint firstItem="E1r-PK-LBZ" firstAttribute="leading" secondItem="tTZ-nr-TL3" secondAttribute="trailing" constant="8" symbolic="YES" id="SuG-Mc-z6Y"/>
+                                        <constraint firstItem="tTZ-nr-TL3" firstAttribute="centerY" secondItem="2Z4-Hm-mcI" secondAttribute="centerY" id="baX-6P-Loj"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="WeL-7H-Gfr" secondAttribute="bottom" constant="-4.5" id="fwa-3d-Clb"/>
+                                        <constraint firstItem="WeL-7H-Gfr" firstAttribute="centerX" secondItem="tTZ-nr-TL3" secondAttribute="centerX" id="jXL-6L-RMp"/>
+                                        <constraint firstItem="E1r-PK-LBZ" firstAttribute="centerY" secondItem="tTZ-nr-TL3" secondAttribute="centerY" id="lMq-6L-Kdv"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="articleImageView" destination="tTZ-nr-TL3" id="yYe-Ta-naH"/>
+                                    <outlet property="headlineLabel" destination="E1r-PK-LBZ" id="L2u-kl-5K8"/>
+                                    <outlet property="videoImageView" destination="WeL-7H-Gfr" id="g0P-xl-adO"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
@@ -38,4 +75,7 @@
             <point key="canvasLocation" x="156" y="79.610194902548727"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="playbutton.png" width="626" height="626"/>
+    </resources>
 </document>

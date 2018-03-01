@@ -9,7 +9,6 @@
 import UIKit
 
 
-
 class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     
     //store all the stories here
@@ -146,78 +145,14 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         let story = self.stories[indexPath.row]
 
         //create cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: "storyCell", for: indexPath)
-        
-        return formatNewsStoryCell(story: story, cell: cell)
-    }
-    
-    func formatNewsStoryCell(story: NewsStoryObject, cell: UITableViewCell) -> UITableViewCell {
-        //create cell
-        cell.backgroundColor = .clear
-        
-        //add placeholder image to properly size the imageview
-        cell.imageView?.image = #imageLiteral(resourceName: "clearplaceholder.png")
-        
-        //lazy load the images for smoother scrolling
-        var cellImageView = UIImageView()
-        var cellVideoOverlay = UIImageView()
-        //only add the subview if it does not exist
-        //fetch the extra image views to change their images or alpha
-        for subview in (cell.imageView?.subviews)!{
-            //the image views are already in the cell no need to add them again
-            if subview.tag == 1{
-                cellImageView = subview as! UIImageView
-            }
-            else if subview.tag == 2{
-                cellVideoOverlay = subview as! UIImageView
-            }
-        }
-        
-        //check to see if the tease image is already downloaded if so add it to the image view
-        if story.tease != nil {
-            cellImageView.image = story.tease!
-        }
-        else{
-            //set the image to the clear placeholder to override any existing image
-            cellImageView.image = #imageLiteral(resourceName: "clearplaceholder.png")
-            if self.scrolling == false{
-                //if we are not scrolling that means that this article is in view so lazy download the image
-                story.downloadImage()
-            }
-        }
-        
-        //add the extra cell image views if it is missing
-        cellImageView.contentMode = .scaleAspectFill
-        cellImageView.clipsToBounds = true
-        cellImageView.tag = 1
-        cellImageView.frame = CGRect(x: 0, y: 0, width: (cell.imageView?.frame.width)!, height: (cell.imageView?.frame.height)!)
-        cell.imageView?.addSubview(cellImageView)
-        
-        //add the video image on top of the image
-        //i will adjust the alpha to show it
-        cellVideoOverlay.contentMode = .scaleAspectFit
-        cellVideoOverlay.clipsToBounds = true
-        cellVideoOverlay.tag = 2
-        cellVideoOverlay.image = #imageLiteral(resourceName: "playbutton.png")
-        cellVideoOverlay.frame = CGRect(x: 0, y: 0, width: (cell.imageView?.frame.width)!, height: (cell.imageView?.frame.height)!)
-        
-        cell.imageView?.addSubview(cellVideoOverlay)
-        
-        //for videos
-        //set the label text color to red if it is a video and black if it is an article
-        //set the video image alpha to one if it is a video
-        cell.textLabel?.text = story.headline
-        
-        if story.type == .video {
-            cell.textLabel?.textColor = .red
-            cellVideoOverlay.alpha = 1.0
-        }
-        else{
-            cell.textLabel?.textColor = .black
-            cellVideoOverlay.alpha = 0.0
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "storyCell", for: indexPath) as! NewsTableViewCell
+        cell.customizeCell(story: story, scrolling: self.scrolling)
         
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+       return CGFloat(44)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -233,36 +168,15 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     // MARK: - Article webview
     func presentArticleViewController(url: URL) {
         //create and pop a simple presentation vc to display the url
-        let vc = UIViewController()
+        let vc = StoryViewController()
+        vc.addWebView(url: url)
         vc.modalPresentationStyle = UIModalPresentationStyle.popover
-        
-        //header
-        let header = UIView(frame: CGRect(x: 0, y: 0, width: vc.view.frame.size.width, height: 60))
-        header.backgroundColor = .lightGray
-        vc.view.addSubview(header)
-        
-        //dismiss button
-        let button = UIButton(type: .system)
-        button.frame =  CGRect(x: 10, y: 25, width: 60, height: 40)
-        button.setTitle("Done", for: .normal)
-        button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        header.addSubview(button)
-        
-        //webview
-        let webView = UIWebView(frame: CGRect(x: 0, y: 60, width: self.view.frame.size.width, height:  self.view.frame.size.height-60))
-        let request = URLRequest(url: url)
-        webView.loadRequest(request)
-        vc.view.addSubview(webView)
-        
+
         present(vc, animated: true, completion: nil)
         
         //this is to prevent crash for ipads
         let popoverPresentationController = vc.popoverPresentationController
         popoverPresentationController?.sourceView = self.view
-    }
-    
-    @objc func buttonAction(sender: UIButton!) {
-        self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Scrollview delegate

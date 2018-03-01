@@ -49,7 +49,6 @@ class NewsStoryObject: NSObject {
             type = .article
         }
         else{
-            headline = String(format:"%@Video: ",headline)
             type = .video
         }
         
@@ -85,23 +84,6 @@ class NewsStoryObject: NSObject {
             }
         }
     }
-    
-    //add a video overlay directly to the image
-//    func addVideoImage(data: Data) -> UIImage {
-//        let videoImage =  #imageLiteral(resourceName: "playbutton.png")
-//        if let originalImage = UIImage(data: data){
-//
-//            UIGraphicsBeginImageContextWithOptions((originalImage.size), false, 0.0)
-//            originalImage.draw(in: CGRect(x: 0, y: 0, width: (originalImage.size.width), height: (originalImage.size.height)))
-//            videoImage.draw(in: CGRect(x: (originalImage.size.width)/2 - (originalImage.size.height)/2, y: 0, width: (originalImage.size.height), height: (originalImage.size.height)))
-//
-//            let result = UIGraphicsGetImageFromCurrentImageContext()
-//            UIGraphicsEndImageContext()
-//
-//            return result!
-//        }
-//        return videoImage
-//    }
 }
 
 
