@@ -17,9 +17,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="S6S-E5-Agj">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="110"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XaY-b7-GHv">
+                                    <rect key="frame" x="0.0" y="61" width="375" height="49"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="49" id="99a-is-2dl"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NBCNews.png" translatesAutoresizingMaskIntoConstraints="NO" id="p09-y1-n0C">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                </imageView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="p09-y1-n0C" firstAttribute="leading" secondItem="S6S-E5-Agj" secondAttribute="leading" id="5hz-1D-6px"/>
+                                <constraint firstItem="p09-y1-n0C" firstAttribute="leading" secondItem="XaY-b7-GHv" secondAttribute="leading" id="5yh-cc-YPE"/>
+                                <constraint firstItem="p09-y1-n0C" firstAttribute="trailing" secondItem="XaY-b7-GHv" secondAttribute="trailing" id="9c7-Ds-A8O"/>
+                                <constraint firstItem="XaY-b7-GHv" firstAttribute="top" secondItem="p09-y1-n0C" secondAttribute="bottom" constant="1" id="RHI-41-jFK"/>
+                                <constraint firstAttribute="trailing" secondItem="p09-y1-n0C" secondAttribute="trailing" id="X5c-5o-Dzl"/>
+                                <constraint firstItem="p09-y1-n0C" firstAttribute="top" secondItem="S6S-E5-Agj" secondAttribute="top" id="a8a-0L-t59"/>
+                                <constraint firstAttribute="bottom" secondItem="XaY-b7-GHv" secondAttribute="bottom" id="hii-yG-xY2"/>
+                            </constraints>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="storyCell" id="YKt-8h-3Gl" customClass="NewsTableViewCell" customModule="NBCNewsApp" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="138" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YKt-8h-3Gl" id="2Z4-Hm-mcI">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -69,6 +97,9 @@
                             <outlet property="delegate" destination="TRn-Uk-zTu" id="AGx-9v-KxB"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="headerLabel" destination="XaY-b7-GHv" id="xDD-pH-v02"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9az-Ut-5VG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -76,6 +107,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="NBCNews.png" width="1041" height="155"/>
         <image name="playbutton.png" width="626" height="626"/>
     </resources>
 </document>

@@ -14,9 +14,9 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
     //store all the stories here
     var stories: Array<NewsStoryObject> = []
     var spinner: UIActivityIndicatorView!
-    var headerLabel = UILabel()
     var scrolling: Bool = false
-
+    @IBOutlet weak var headerLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
@@ -30,24 +30,8 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         spinner.startAnimating()
         self.view.addSubview(spinner)
         
-        //add header to tableview
-        let headerView = UIView(frame:CGRect(x: 0, y: 0, width: self.view.frame.width, height: 110))
-        //image view
-        let headerImageName = "NBCNews.png"
-        let headerImage = UIImage(named: headerImageName)
-        let headerImageView = UIImageView(image: headerImage!)
-        headerImageView.contentMode = .scaleAspectFit
-        headerImageView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 60)
-        headerView.addSubview(headerImageView)
-        //label
-        self.headerLabel = UILabel(frame: CGRect(x: 0, y: 60, width: self.view.frame.width, height: 50))
-        headerLabel.numberOfLines = 2
-        headerLabel.textAlignment = .center
-        headerView.addSubview(headerLabel)
-
-        self.tableView.tableHeaderView = headerView
-        
         //add background
+        //this cannot be added to a uitableviewcontroller in the story board so I'm adding it programmatically
         let backgroundImageName = "nbcbackground.jpg"
         let backgroundImage = UIImage(named: backgroundImageName)
         let backgroundView = UIImageView(image: backgroundImage!)
