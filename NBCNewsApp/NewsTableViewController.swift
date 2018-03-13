@@ -155,9 +155,10 @@ class NewsTableViewController: UITableViewController, NewsStoryDelegate {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "StoryViewController") as! StoryViewController
-        controller.loadUrl(url: url)
         controller.modalPresentationStyle = UIModalPresentationStyle.popover
-        present(controller, animated: true, completion: nil)
+        present(controller, animated: true, completion:  { () -> Void in
+            controller.loadUrl(url: url)
+        })
         
         //this is to prevent crash for ipads
         let popoverPresentationController = controller.popoverPresentationController
